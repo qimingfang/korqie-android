@@ -17,12 +17,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.squareup.dagger:dagger:1.2.+'
     compile 'com.squareup.okhttp:okhttp:2.1.0+'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0+'
+    compile 'com.jakewharton:butterknife:6.0.0+'
+    compile 'com.squareup.retrofit:retrofit:1.8.0+'
     compile group: 'com.google.guava', name: 'guava', version: '12.0'
     provided 'com.squareup.dagger:dagger-compiler:1.2.+'
 }

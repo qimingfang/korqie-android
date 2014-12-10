@@ -1,28 +1,30 @@
 package korqie.korqie;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
+import api.UserService;
+import api.model.Response;
+import api.model.UserRegister;
+import butterknife.ButterKnife;
 import korqie.myapplication.R;
+import service.RegisterUserTask;
 
 public class PuzzleActivity extends Activity {
 
   public static final String TAG = PuzzleActivity.class.getName();
 
   @Inject transport.HttpClient httpClient;
+  @Inject UserService userService;
 
   private KorqieApplication app;
 
@@ -31,35 +33,25 @@ public class PuzzleActivity extends Activity {
     super.onCreate(savedInstanceState);
     app = (KorqieApplication) getApplication();
     app.inject(this);
+    ButterKnife.inject(this);
 
     setContentView(R.layout.activity_puzzle);
 
     final Button button = (Button) findViewById(R.id.bt);
     button.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
-        httpClient.get("https://api.korqie.com/", new Callback() {
-          @Override
-          public void onFailure(Request request, IOException e) {
-            // TODO(qimingfang): better logging
-            System.out.println("request failed");
-          }
 
-          @Override
-          public void onResponse(final Response response) throws IOException {
-            runOnUiThread(new Runnable() {
-              @Override
-              public void run() {
-                TextView textView = (TextView) findViewById(R.id.textView);
-                try {
-                  textView.setText(response.body().string());
-                } catch (IOException e) {
+        AsyncTask<UserRegister, Integer, Response> task = new RegisterUserTask(userService).execute(
+            new UserRegister("t4", "t4@gmail.com", "t4", "thumb4"));
 
-                }
-              }
-            });
-
-          }
-        });
+        try {
+          Response response = task.get();
+          System.out.println(response);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        } catch (ExecutionException e) {
+          e.printStackTrace();
+        }
       }
     });
   }
