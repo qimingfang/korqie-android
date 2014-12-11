@@ -1,4 +1,4 @@
-package api.model;
+package com.korqie.models.user;
 
 import java.util.Arrays;
 import java.util.List;

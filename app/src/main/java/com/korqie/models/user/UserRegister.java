@@ -1,4 +1,4 @@
-package api.model;
+package com.korqie.models.user;
 
 /**
  * A Registration API object.

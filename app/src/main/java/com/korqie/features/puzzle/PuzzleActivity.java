@@ -1,30 +1,46 @@
-package korqie.korqie;
+package com.korqie.features.puzzle;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-import java.util.concurrent.ExecutionException;
+import com.korqie.KorqieApplication;
+import com.korqie.models.user.Response;
+import com.korqie.models.user.UserRegister;
+import com.korqie.network.requests.UserRegisterRequest;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import javax.inject.Inject;
 
-import api.UserService;
-import api.model.Response;
-import api.model.UserRegister;
 import butterknife.ButterKnife;
 import korqie.myapplication.R;
-import service.RegisterUserTask;
 
 public class PuzzleActivity extends Activity {
 
   public static final String TAG = PuzzleActivity.class.getName();
 
-  @Inject transport.HttpClient httpClient;
-  @Inject UserService userService;
+  /**
+   * A class to handle user registration events.
+   */
+  private final class RegisterUserRequestListener implements RequestListener<Response> {
+    @Override
+    public void onRequestFailure(SpiceException spiceException) {
+      Toast.makeText(PuzzleActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestSuccess(Response response) {
+      Toast.makeText(PuzzleActivity.this, "Success", Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  @Inject SpiceManager spiceManager;
 
   private KorqieApplication app;
 
@@ -41,17 +57,9 @@ public class PuzzleActivity extends Activity {
     button.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
 
-        AsyncTask<UserRegister, Integer, Response> task = new RegisterUserTask(userService).execute(
-            new UserRegister("t4", "t4@gmail.com", "t4", "thumb4"));
-
-        try {
-          Response response = task.get();
-          System.out.println(response);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        } catch (ExecutionException e) {
-          e.printStackTrace();
-        }
+        UserRegister userRegister = new UserRegister("t5", "t5@gmail.com", "t5", "thumb5");
+        spiceManager.execute(new UserRegisterRequest(userRegister),
+            new RegisterUserRequestListener());
       }
     });
   }
@@ -76,5 +84,17 @@ public class PuzzleActivity extends Activity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  protected void onStart() {
+    spiceManager.start(this);
+    super.onStart();
+  }
+
+  @Override
+  protected void onStop() {
+    spiceManager.shouldStop();
+    super.onStop();
   }
 }

@@ -1,4 +1,4 @@
-package korqie.korqie;
+package com.korqie;
 
 import android.app.Application;
 

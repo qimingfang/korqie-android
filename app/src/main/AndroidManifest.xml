@@ -3,15 +3,16 @@
     package="korqie.myapplication" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="korqie.korqie.KorqieApplication"
+        android:name="com.korqie.KorqieApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="korqie.korqie.PuzzleActivity"
+            android:name="com.korqie.features.puzzle.PuzzleActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,6 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name="com.korqie.network.services.ApiService" android:exported="false" />
     </application>
 
 </manifest>
