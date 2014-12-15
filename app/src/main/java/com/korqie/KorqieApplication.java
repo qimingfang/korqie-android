@@ -8,15 +8,13 @@ import java.util.List;
 import dagger.ObjectGraph;
 
 /**
- * Created by qf26 on 12/7/14.
+ * Main Android application.
  */
 public class KorqieApplication extends Application {
   private ObjectGraph graph;
 
   @Override public void onCreate() {
     super.onCreate();
-    System.out.println("OnCreate for main application!");
-
     graph = ObjectGraph.create(getModules().toArray());
   }
 

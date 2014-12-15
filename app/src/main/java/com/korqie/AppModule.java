@@ -1,5 +1,6 @@
 package com.korqie;
 
+import com.google.gson.Gson;
 import com.korqie.features.puzzle.PuzzleActivity;
 import com.korqie.network.services.ApiService;
 import com.octo.android.robospice.SpiceManager;
@@ -8,6 +9,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit.converter.Converter;
+import retrofit.converter.GsonConverter;
 
 /**
  * Module that binds production dependencies.
@@ -22,5 +25,10 @@ public class AppModule {
   @Singleton
   SpiceManager provideUserService() {
     return new SpiceManager(ApiService.class);
+  }
+
+  @Provides
+  Converter proideGSonConverter() {
+    return new GsonConverter(new Gson());
   }
 }

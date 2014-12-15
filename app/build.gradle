@@ -1,32 +1,53 @@
 apply plugin: 'com.android.application'
+apply plugin: 'robolectric'
 
 android {
     compileSdkVersion 20
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "korqie.myapplication"
+        applicationId "com.korqie"
         minSdkVersion 15
         targetSdkVersion 20
         versionCode 1
         versionName "1.0"
+        //testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
     }
+
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     lintOptions {
         disable 'InvalidPackage'
     }
+
     packagingOptions {
+        exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
+        exclude 'LICENSE.txt'
+        exclude 'LICENSE'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'NOTICE.txt'
+        exclude 'NOTICE'
+        exclude 'asm-license.txt'
     }
 }
 
+robolectric {
+    include '*'
+    //exclude '**/espresso/**/*.class'
+}
+
 dependencies {
+    androidTestCompile "org.mockito:mockito-core:1.9.5+"
+    androidTestCompile('junit:junit:4.+') {
+        exclude module: 'hamcrest-core'
+    }
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.squareup.dagger:dagger:1.2.+'
     compile 'com.squareup.okhttp:okhttp:2.1.0+'
@@ -39,4 +60,31 @@ dependencies {
 
     compile group: 'com.google.guava', name: 'guava', version: '12.0'
     provided 'com.squareup.dagger:dagger-compiler:1.2.+'
+
+    // Testing Libraries
+    compile 'com.android.support:support-v4:21.0.3'
+
+    androidTestCompile 'org.hamcrest:hamcrest-integration:1.1'
+    androidTestCompile 'org.hamcrest:hamcrest-core:1.1'
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.1'
+
+
+    androidTestCompile('org.robolectric:robolectric:2.3') {
+        exclude module: 'classworlds'
+        exclude module: 'commons-logging'
+        exclude module: 'httpclient'
+        exclude module: 'maven-artifact'
+        exclude module: 'maven-artifact-manager'
+        exclude module: 'maven-error-diagnostics'
+        exclude module: 'maven-model'
+        exclude module: 'maven-project'
+        exclude module: 'maven-settings'
+        exclude module: 'plexus-container-default'
+        exclude module: 'plexus-interpolation'
+        exclude module: 'plexus-utils'
+        exclude module: 'support-v4'
+        exclude module: 'wagon-file'
+        exclude module: 'wagon-http-lightweight'
+        exclude module: 'wagon-provider-api'
+    }
 }

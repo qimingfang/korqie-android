@@ -1,7 +1,10 @@
 package com.korqie.network.endpoints;
 
-import com.korqie.models.user.Response;
+import com.korqie.models.user.ApiResponse;
+import com.korqie.models.login.UserLogin;
 import com.korqie.models.user.UserRegister;
+
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -11,5 +14,8 @@ import retrofit.http.POST;
 public interface UsersEndpoint {
 
   @POST("/users")
-  Response register(@Body UserRegister userRegister);
+  ApiResponse register(@Body UserRegister userRegister);
+
+  @POST("/auth/login")
+  Response login(@Body UserLogin userLogin);
 }
