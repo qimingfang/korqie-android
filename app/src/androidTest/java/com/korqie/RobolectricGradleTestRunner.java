@@ -7,7 +7,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.res.Fs;
 
 /**
- * Created by qf26 on 12/14/14.
+ * A {@link RobolectricTestRunner} pointed at the Korqie AndroidManifest.
  */
 public class RobolectricGradleTestRunner extends RobolectricTestRunner {
   private static final int MAX_SDK_SUPPORTED_BY_ROBOLECTRIC = 18;

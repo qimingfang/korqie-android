@@ -1,20 +1,15 @@
 package com.korqie.network.requests;
 
-import android.app.Activity;
-
 import com.google.common.collect.ImmutableList;
 import com.korqie.RobolectricGradleTestRunner;
-import com.korqie.features.puzzle.PuzzleActivity;
 import com.korqie.models.login.UserLogin;
 import com.korqie.models.user.ApiResponse;
 import com.korqie.models.user.User;
 import com.korqie.network.endpoints.UsersEndpoint;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.annotation.Config;
 
 import java.lang.reflect.Type;
@@ -25,6 +20,8 @@ import retrofit.client.Response;
 import retrofit.converter.Converter;
 import retrofit.mime.TypedInput;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -67,17 +64,9 @@ public class UserLoginRequestTest {
   }
 
   @Test
-  public void testSomething() throws Exception {
-    Activity activity = Robolectric.buildActivity(PuzzleActivity.class).create().get();
-    Assert.assertTrue(activity != null);
-  }
-
-  @Test
   public void test() {
-    Assert.assertEquals(1, 1);
-    //Assert.assertTrue(false);
-    //ApiResponse response = userLoginRequest.loadDataFromNetwork();
-    //assertThat(response.getHeaders().get().get(0).getName()).isEqualTo(HEADER_NAME);
-    //assertThat(response.getHeaders().get().get(0).getValue()).isEqualTo(HEADER_NAME);
+    ApiResponse response = userLoginRequest.loadDataFromNetwork();
+    assertThat(response.getHeaders().get().get(0).getName(), equalTo(HEADER_NAME));
+    assertThat(response.getHeaders().get().get(0).getValue(), equalTo(HEADER_VALUE));
   }
 }
