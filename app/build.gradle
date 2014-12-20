@@ -38,37 +38,25 @@ android {
     }
 }
 
-robolectric {
-    include '*'
-    //exclude '**/espresso/**/*.class'
-}
-
 dependencies {
-    androidTestCompile "org.mockito:mockito-core:1.9.5+"
+    androidTestCompile 'org.mockito:mockito-core:1.9.5+'
     androidTestCompile('junit:junit:4.+') {
         exclude module: 'hamcrest-core'
     }
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.squareup.dagger:dagger:1.2.+'
     compile 'com.squareup.okhttp:okhttp:2.1.0+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0+'
     compile 'com.jakewharton:butterknife:6.0.0+'
     compile 'com.squareup.retrofit:retrofit:1.8.0+'
-
     compile 'com.octo.android.robospice:robospice:1.4.12+'
     compile 'com.octo.android.robospice:robospice-retrofit:1.4.12+'
-
-    compile group: 'com.google.guava', name: 'guava', version: '12.0'
+    compile 'com.google.guava:guava:12.0'
     provided 'com.squareup.dagger:dagger-compiler:1.2.+'
-
     // Testing Libraries
     compile 'com.android.support:support-v4:21.0.3'
-
     androidTestCompile 'org.hamcrest:hamcrest-integration:1.1'
     androidTestCompile 'org.hamcrest:hamcrest-core:1.1'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.1'
-
-
     androidTestCompile('org.robolectric:robolectric:2.3') {
         exclude module: 'classworlds'
         exclude module: 'commons-logging'
@@ -87,4 +75,5 @@ dependencies {
         exclude module: 'wagon-http-lightweight'
         exclude module: 'wagon-provider-api'
     }
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
