@@ -8,6 +8,7 @@ Make sure you have [Android Studio](https://developer.android.com/sdk/installing
 
 Import Korqie as an existing project, then go to `Build >> Make Project` to build gradle dependencies.
 
-Attach an android device, enable USB debugging, and deploy
+Attach an android device, enable USB debugging, and deploy.
 
-TODO(qimingfang): update this more
+##Testing
+To run tests: `./gradlew test` Note that `BUILD SUCCESSFUL` in testing actually means that the tests have passed. 
