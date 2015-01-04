@@ -64,7 +64,7 @@ public class UserLoginRequestTest {
   }
 
   @Test
-  public void test() {
+  public void testLoadDataFromNetwork() {
     ApiResponse response = userLoginRequest.loadDataFromNetwork();
     assertThat(response.getHeaders().get().get(0).getName(), equalTo(HEADER_NAME));
     assertThat(response.getHeaders().get().get(0).getValue(), equalTo(HEADER_VALUE));
