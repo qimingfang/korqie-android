@@ -1,4 +1,4 @@
-package com.korqie.features.puzzle;
+package com.korqie.features.login;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -25,9 +25,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.converter.Converter;
 
-public class PuzzleActivity extends Activity {
+public class LoginActivity extends Activity {
 
-  public static final String TAG = PuzzleActivity.class.getName();
+  public static final String TAG = LoginActivity.class.getName();
 
   /**
    * A class to handle user registration events.
@@ -35,24 +35,24 @@ public class PuzzleActivity extends Activity {
   private final class RegisterUserRequestListener implements RequestListener<ApiResponse> {
     @Override
     public void onRequestFailure(SpiceException spiceException) {
-      Toast.makeText(PuzzleActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+      Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onRequestSuccess(ApiResponse apiResponse) {
-      Toast.makeText(PuzzleActivity.this, "Success", Toast.LENGTH_SHORT).show();
+      Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
     }
   }
 
   private final class LoginUserRequestListener implements RequestListener<ApiResponse> {
     @Override
     public void onRequestFailure(SpiceException spiceException) {
-      Toast.makeText(PuzzleActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+      Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onRequestSuccess(ApiResponse apiResponse) {
-      Toast.makeText(PuzzleActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+      Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
     }
   }
 
@@ -81,7 +81,7 @@ public class PuzzleActivity extends Activity {
         String password = passwordField.getText().toString();
 
         if (Strings.isNullOrEmpty(email) || Strings.isNullOrEmpty(password)) {
-          Toast.makeText(PuzzleActivity.this, "Email and Password cannot be blank",
+          Toast.makeText(LoginActivity.this, "Email and Password cannot be blank",
               Toast.LENGTH_SHORT).show();
           return;
         }

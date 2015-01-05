@@ -15,13 +15,19 @@ android {
 
     buildTypes {
         debug {
+            buildConfigField "String", "SHARED_PREFS_FILE", '"TestPrefs"'
+            buildConfigField "String", "DEFAULT_EMAIL", '"test@korqie.com"'
+            buildConfigField "String", "DEFAULT_PWD", '"test"'
             buildConfigField "String", "SEVER_URL", '"http://dev.korqie.com"'
         }
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "SHARED_PREFS_FILE", '"Prefs"'
             buildConfigField "String", "SEVER_URL", '"http://api.korqie.com"'
+            buildConfigField "String", "DEFAULT_EMAIL", '""'
+            buildConfigField "String", "DEFAULT_PWD", '""'
         }
     }
 
