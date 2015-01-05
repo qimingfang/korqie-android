@@ -1,6 +1,8 @@
 package com.korqie.features.login;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,10 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
+import com.korqie.BuildConfig;
 import com.korqie.KorqieApplication;
 import com.korqie.R;
+import com.korqie.features.SharedPrefKeys;
+import com.korqie.features.history.HistoryActivity;
+import com.korqie.models.ApiResponse;
+import com.korqie.models.login.LoginApiResponse;
 import com.korqie.models.login.UserLogin;
-import com.korqie.models.user.ApiResponse;
 import com.korqie.network.requests.UserLoginRequest;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -44,15 +50,39 @@ public class LoginActivity extends Activity {
     }
   }
 
-  private final class LoginUserRequestListener implements RequestListener<ApiResponse> {
+  private final class LoginUserRequestListener implements RequestListener<LoginApiResponse> {
     @Override
     public void onRequestFailure(SpiceException spiceException) {
-      Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+      spiceException.printStackTrace();
+      Toast.makeText(LoginActivity.this, "Login failed. Invalid email/password",
+          Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onRequestSuccess(ApiResponse apiResponse) {
-      Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+    public void onRequestSuccess(LoginApiResponse apiResponse) {
+
+      String cookieValue = apiResponse.getCookie();
+      String id = apiResponse.getFirstValue().getUser();
+
+      if (cookieValue != null && id != null) {
+        SharedPreferences settings = getSharedPreferences(BuildConfig.SHARED_PREFS_FILE, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putString(SharedPrefKeys.ID.name(), id);
+        editor.putString(SharedPrefKeys.COOKIE.name(), cookieValue);
+
+        // Commit the edits
+        editor.apply();
+
+        // Navigate to the history screen.
+        Intent intent = new Intent(LoginActivity.this, HistoryActivity.class);
+        startActivity(intent);
+        return;
+      }
+
+      // Server sent down malformed response?
+      Toast.makeText(LoginActivity.this, "Login failed. Please update your client",
+          Toast.LENGTH_SHORT).show();
     }
   }
 
@@ -68,11 +98,14 @@ public class LoginActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_puzzle);
+    setContentView(R.layout.activity_login);
     ButterKnife.inject(this);
 
     app = (KorqieApplication) getApplication();
     app.inject(this);
+
+    emailField.setText(BuildConfig.DEFAULT_EMAIL);
+    passwordField.setText(BuildConfig.DEFAULT_PWD);
 
     button.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {

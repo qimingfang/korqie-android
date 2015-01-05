@@ -1,7 +1,15 @@
 package com.korqie.models.user;
 
+import com.korqie.models.ApiResponse;
+
+import java.util.List;
+
 /**
- * Created by qf26 on 1/4/15.
+ * ApiResponse with list of {@link User} as expected values.
  */
-public class UserApiResponse {
+public class UserApiResponse extends ApiResponse<User> {
+
+  public UserApiResponse(List<String> errors, String message, int modified, List<User> results) {
+    super(errors, message, modified, results);
+  }
 }

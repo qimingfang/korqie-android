@@ -3,7 +3,7 @@ package com.korqie.network.requests;
 import com.google.common.collect.ImmutableList;
 import com.korqie.RobolectricGradleTestRunner;
 import com.korqie.models.login.UserLogin;
-import com.korqie.models.user.ApiResponse;
+import com.korqie.models.ApiResponse;
 import com.korqie.models.user.User;
 import com.korqie.network.endpoints.UsersEndpoint;
 

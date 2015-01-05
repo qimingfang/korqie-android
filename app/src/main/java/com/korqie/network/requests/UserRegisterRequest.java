@@ -1,12 +1,12 @@
 package com.korqie.network.requests;
 
-import com.korqie.models.user.ApiResponse;
+import com.korqie.models.ApiResponse;
 import com.korqie.models.user.UserRegister;
 import com.korqie.network.endpoints.UsersEndpoint;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
- * Created by qf26 on 12/11/14.
+ * Wrapper around HTTP request for user registration.
  */
 public class UserRegisterRequest extends RetrofitSpiceRequest<ApiResponse, UsersEndpoint> {
 

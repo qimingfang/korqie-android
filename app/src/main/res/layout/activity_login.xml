@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/imageView1"
+        android:id="@+id/loginLogo"
         android:src="@drawable/logo" />
 
     <EditText
@@ -41,14 +41,6 @@
         android:layout_height="wrap_content"
         android:text="Login"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_above="@+id/passwordText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 

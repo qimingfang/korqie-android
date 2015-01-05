@@ -1,7 +1,16 @@
 package com.korqie.models.login;
 
+import com.korqie.models.ApiResponse;
+import com.korqie.models.user.LoginUser;
+
+import java.util.List;
+
 /**
- * Created by qf26 on 1/4/15.
+ * ApiResponse with list of {@ling String} as expected values
  */
-public class LoginApiResponse {
+public class LoginApiResponse extends ApiResponse<LoginUser> {
+  public LoginApiResponse(List<String> errors, String message, int modified,
+                          List<LoginUser> results) {
+    super(errors, message, modified, results);
+  }
 }

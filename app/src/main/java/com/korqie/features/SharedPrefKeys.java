@@ -1,7 +1,9 @@
 package com.korqie.features;
 
 /**
- * Created by qf26 on 1/4/15.
+ * Contains android app cache keys
  */
-public class SharedPrefKeys {
+public enum SharedPrefKeys {
+  ID,
+  COOKIE
 }
