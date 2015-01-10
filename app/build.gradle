@@ -86,4 +86,5 @@ dependencies {
         exclude module: 'wagon-provider-api'
     }
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':facebook')
 }
