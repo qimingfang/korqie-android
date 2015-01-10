@@ -1,4 +1,4 @@
-package com.korqie.models.user;
+package com.korqie.models.login;
 
 /**
  * Special User response from Login.

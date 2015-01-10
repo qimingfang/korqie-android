@@ -1,18 +1,16 @@
 package com.korqie.models;
 
-import com.google.common.base.Optional;
-
 import java.util.List;
 
 import retrofit.client.Header;
 
 /**
- * A Response API object.
+ * A generic response API object.
  */
 public class ApiResponse<T> {
   private static final String COOKIE_VALUE = "set-cookie";
 
-  private Optional<List<Header>> headers;
+  private List<Header> headers;
 
   protected final List<String> errors;
   protected final String message;
@@ -27,11 +25,11 @@ public class ApiResponse<T> {
   }
 
   public ApiResponse setHeaders(List<Header> headers) {
-    this.headers = Optional.of(headers);
+    this.headers = headers;
     return this;
   }
 
-  public Optional<List<Header>> getHeaders() {
+  public List<Header> getHeaders() {
     return this.headers;
   }
 
@@ -47,9 +45,12 @@ public class ApiResponse<T> {
     return null;
   }
 
+  /*
+   * @return cookie if it exists.
+   */
   public String getCookie() {
-    if (headers.isPresent()) {
-      for (Header header : headers.get()) {
+    if (headers != null) {
+      for (Header header : headers) {
         if (COOKIE_VALUE.equals(header.getName())) {
           return header.getValue();
         }

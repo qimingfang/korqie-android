@@ -1,7 +1,6 @@
 package com.korqie.models.login;
 
 import com.korqie.models.ApiResponse;
-import com.korqie.models.user.LoginUser;
 
 import java.util.List;
 
