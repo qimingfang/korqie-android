@@ -201,12 +201,12 @@ public class FacebookLoginActivity extends FragmentActivity {
 
     private void updateUI() {
         Session session = Session.getActiveSession();
-        makeMeRequest(session);
         boolean enableButtons = (session != null && session.isOpened());
 
         if (enableButtons && user != null) {
             profilePictureView.setProfileId(user.getId());
             greeting.setText(getString(R.string.hello_user, user.getFirstName()) + "Your birthday is " + user.getBirthday());
+            makeMeRequest(session);
         } else {
             profilePictureView.setProfileId(null);
             greeting.setText(null);

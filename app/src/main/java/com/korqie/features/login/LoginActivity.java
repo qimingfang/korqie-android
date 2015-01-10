@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.base.Strings;
 import com.korqie.BuildConfig;
 import com.korqie.KorqieApplication;
 import com.korqie.R;
@@ -113,7 +112,7 @@ public class LoginActivity extends Activity {
         String email = emailField.getText().toString();
         String password = passwordField.getText().toString();
 
-        if (Strings.isNullOrEmpty(email) || Strings.isNullOrEmpty(password)) {
+        if (email == null || email.length() == 0 || password == null || password.length() == 0) {
           Toast.makeText(LoginActivity.this, "Email and Password cannot be blank",
               Toast.LENGTH_SHORT).show();
           return;

@@ -2,9 +2,9 @@ package com.korqie.network.requests;
 
 import com.google.common.collect.ImmutableList;
 import com.korqie.RobolectricGradleTestRunner;
+import com.korqie.models.login.LoginApiResponse;
 import com.korqie.models.login.UserLogin;
-import com.korqie.models.ApiResponse;
-import com.korqie.models.user.User;
+import com.korqie.models.login.LoginUser;
 import com.korqie.network.endpoints.UsersEndpoint;
 
 import org.junit.Before;
@@ -50,10 +50,10 @@ public class UserLoginRequestTest {
 
     mockConverter = mock(Converter.class);
     when(mockConverter.fromBody(any(TypedInput.class), any(Type.class))).thenReturn(
-        new ApiResponse(ImmutableList.<String>of(), // errors
+        new LoginApiResponse(ImmutableList.<String>of(), // errors
             "Api service message", // message
             0, // num modified
-            ImmutableList.<User>of()));// ))
+            ImmutableList.<LoginUser>of()));// ))
 
     mockService = mock(UsersEndpoint.class);
     when(mockService.login(any(UserLogin.class))).thenReturn(
@@ -65,8 +65,8 @@ public class UserLoginRequestTest {
 
   @Test
   public void testLoadDataFromNetwork() {
-    ApiResponse response = userLoginRequest.loadDataFromNetwork();
-    assertThat(response.getHeaders().get().get(0).getName(), equalTo(HEADER_NAME));
-    assertThat(response.getHeaders().get().get(0).getValue(), equalTo(HEADER_VALUE));
+    LoginApiResponse response = userLoginRequest.loadDataFromNetwork();
+    assertThat(response.getHeaders().get(0).getName(), equalTo(HEADER_NAME));
+    assertThat(response.getHeaders().get(0).getValue(), equalTo(HEADER_VALUE));
   }
 }
