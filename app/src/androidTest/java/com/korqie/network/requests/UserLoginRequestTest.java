@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.korqie.RobolectricGradleTestRunner;
 import com.korqie.models.login.LoginApiResponse;
 import com.korqie.models.login.UserLogin;
-import com.korqie.models.user.LoginUser;
+import com.korqie.models.login.LoginUser;
 import com.korqie.network.endpoints.UsersEndpoint;
 
 import org.junit.Before;
@@ -66,7 +66,7 @@ public class UserLoginRequestTest {
   @Test
   public void testLoadDataFromNetwork() {
     LoginApiResponse response = userLoginRequest.loadDataFromNetwork();
-    assertThat(response.getHeaders().get().get(0).getName(), equalTo(HEADER_NAME));
-    assertThat(response.getHeaders().get().get(0).getValue(), equalTo(HEADER_VALUE));
+    assertThat(response.getHeaders().get(0).getName(), equalTo(HEADER_NAME));
+    assertThat(response.getHeaders().get(0).getValue(), equalTo(HEADER_VALUE));
   }
 }
