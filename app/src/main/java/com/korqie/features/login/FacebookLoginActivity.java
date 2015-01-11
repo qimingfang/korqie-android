@@ -18,12 +18,12 @@ package com.korqie.features.login;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.AppEventsLogger;
@@ -42,6 +42,7 @@ import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.ProfilePictureView;
 import com.korqie.R;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,6 +68,7 @@ public class FacebookLoginActivity extends FragmentActivity {
     private ProfilePictureView profilePictureView;
     private TextView greeting;
     private TextView extraText;
+    private ImageView imageView;
     private PendingAction pendingAction = PendingAction.NONE;
     private ViewGroup controlsContainer;
     private GraphUser user;
@@ -92,12 +94,12 @@ public class FacebookLoginActivity extends FragmentActivity {
     private FacebookDialog.Callback dialogCallback = new FacebookDialog.Callback() {
         @Override
         public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
-            Log.d("HelloFacebook", String.format("Error: %s", error.toString()));
+            Log.d("FacebookLoginActivity", String.format("Error: %s", error.toString()));
         }
 
         @Override
         public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
-            Log.d("HelloFacebook", "Success!");
+            Log.d("FacebookLoginActivity", "Success!");
         }
     };
 
@@ -115,7 +117,7 @@ public class FacebookLoginActivity extends FragmentActivity {
         setContentView(R.layout.activity_facebook_login);
 
         loginButton = (LoginButton) findViewById(R.id.fb_login_button);
-        loginButton.setReadPermissions(Arrays.asList("user_location", "user_birthday", "user_likes"));
+        loginButton.setReadPermissions(Arrays.asList("user_location", "user_birthday", "user_likes", "user_photos"));
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
@@ -130,6 +132,7 @@ public class FacebookLoginActivity extends FragmentActivity {
         profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
         greeting = (TextView) findViewById(R.id.greeting);
         extraText = (TextView) findViewById(R.id.extra_text);
+        imageView = (ImageView) findViewById(R.id.imageViewFB);
 
         controlsContainer = (ViewGroup) findViewById(R.id.main_ui_container);
 
@@ -205,16 +208,60 @@ public class FacebookLoginActivity extends FragmentActivity {
 
         if (enableButtons && user != null) {
             profilePictureView.setProfileId(user.getId());
-            greeting.setText(getString(R.string.hello_user, user.getFirstName()) + "Your birthday is " + user.getBirthday());
+            greeting.setText(getString(R.string.hello_user, user.getFirstName()) + " Your birthday is " + user.getBirthday());
             makeMeRequest(session);
         } else {
             profilePictureView.setProfileId(null);
             greeting.setText(null);
+            extraText.setText(null);
+            imageView.setImageBitmap(null);
         }
     }
 
 
     private void makeMeRequest(final Session session) {
+        Request rq = displayUserPhotos(session);
+        /*Request rq = displayLikes(session);*/
+        rq.executeAsync();
+    }
+
+    private Request displayUserPhotos(final Session session){
+        Request rq = new Request(Session.getActiveSession(), "me/photos", null, HttpMethod.GET, new Request.Callback() {
+            @Override
+            public void onCompleted(Response response) {
+                try{
+                    String text = "";
+                    text += "These are the url of your pictures: \n";
+                    String urlToDisplay = "";
+                    JSONArray photos = response.getGraphObject().getInnerJSONObject().getJSONArray("data");
+                    for(int i = 0; i < photos.length(); i++){
+                        //JSONObject is used when json start with {}
+                        //JSONArray is used when json start with []
+                        //http://stackoverflow.com/questions/12289844
+                        JSONObject photo = photos.optJSONObject(i);
+                        JSONArray images = photo.optJSONArray("images");
+                        JSONObject largestImage = images.optJSONObject(0);
+                        text += largestImage.optString("source") + "\n";
+                        urlToDisplay = largestImage.optString("source");
+                    }
+                    //http://developer.android.com/guide/practices/screens_support.html
+                    int dpi = getResources().getDisplayMetrics().densityDpi;
+                    double dpToPixels = dpi / 160;
+                    Picasso.with(getBaseContext())
+                            .load(urlToDisplay)
+                            .resize((int)(200 * dpToPixels) ,0)
+                            .into(imageView);
+
+                    extraText.setText(text);
+                    System.out.println(text);
+                }catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        return rq;
+    }
+    private Request displayLikes(final Session session){
         Request rq = new Request(Session.getActiveSession(), "me/likes", null, HttpMethod.GET, new Request.Callback() {
             @Override
             public void onCompleted(Response response) {
@@ -233,9 +280,8 @@ public class FacebookLoginActivity extends FragmentActivity {
                 }
             }
         });
-        rq.executeAsync();
+        return rq;
     }
-
 
     private interface GraphObjectWithId extends GraphObject {
         String getId();
@@ -251,17 +297,6 @@ public class FacebookLoginActivity extends FragmentActivity {
                 .setName("Hello Facebook")
                 .setDescription("The 'Hello Facebook' sample application showcases simple Facebook integration")
                 .setLink("http://developers.facebook.com/android");
-    }
-
-
-
-    private void onClickPostPhoto() {
-        performPublish(PendingAction.POST_PHOTO, canPresentShareDialogWithPhotos);
-    }
-
-    private FacebookDialog.PhotoShareDialogBuilder createShareDialogBuilderForPhoto(Bitmap... photos) {
-        return new FacebookDialog.PhotoShareDialogBuilder(this)
-                .addPhotos(Arrays.asList(photos));
     }
 
     private void showAlert(String title, String message) {

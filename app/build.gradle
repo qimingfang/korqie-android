@@ -60,6 +60,7 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.8.0+'
     compile 'com.octo.android.robospice:robospice:1.4.12+'
     compile 'com.octo.android.robospice:robospice-retrofit:1.4.12+'
+    compile 'com.squareup.picasso:picasso:2.4.0'
     provided 'com.squareup.dagger:dagger-compiler:1.2.+'
     // Testing Libraries
     compile 'com.android.support:support-v4:21.0.3'

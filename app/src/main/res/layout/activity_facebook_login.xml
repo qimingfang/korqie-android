@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
@@ -41,18 +41,30 @@
                 facebook:preset_size="normal"/>
 
         </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/imageViewFB"
+            />
+
         <TextView
             android:id="@+id/extra_text"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center"
             android:textColor="#333"
-            android:textSize="18sp"/>
+            android:textSize="12sp"
+            android:maxWidth="100dp" />
+
     </LinearLayout>
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
-</LinearLayout>
+</RelativeLayout>

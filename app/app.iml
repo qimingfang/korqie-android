@@ -122,6 +122,7 @@
     <orderEntry type="library" exported="" scope="TEST" name="fest-reflect-1.4.1" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.1.4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-util-5.0.1" level="project" />
+    <orderEntry type="library" exported="" name="picasso-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="robospice-1.4.12" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-integration-1.1" level="project" />
