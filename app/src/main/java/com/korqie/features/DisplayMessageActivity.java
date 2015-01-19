@@ -26,7 +26,7 @@ import java.util.List;
 
 public class DisplayMessageActivity extends Activity {
     private TextView displayMessageText;
-    private ImageView imageView;
+    private ImageView imageViewFB;
     private Button newPictureButton;
     private Session fbSession;
 
@@ -34,7 +34,7 @@ public class DisplayMessageActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_message);
-        imageView = (ImageView) findViewById(R.id.imageViewFB);
+        imageViewFB = (ImageView) findViewById(R.id.imageViewFB);
         displayMessageText = (TextView) findViewById(R.id.display_message_text);
         newPictureButton = (Button) findViewById(R.id.newPictureButton);
 
@@ -70,10 +70,13 @@ public class DisplayMessageActivity extends Activity {
             public void onCompleted(Response response) {
                 try{
                     String text = "";
-                    text += "These are the url of your pictures: \n";
                     String urlToDisplay = "";
                     JSONArray photos = response.getGraphObject().getInnerJSONObject().getJSONArray("data");
                     List<String> listOfImageURL = new ArrayList<String>();
+
+                    text += "These are the url of your pictures: \n";
+                    text += "You have " + photos.length() + " pictures. \n";
+
                     for(int i = 0; i < photos.length(); i++){
                         //JSONObject is used when json start with {}
                         //JSONArray is used when json start with []
@@ -91,7 +94,7 @@ public class DisplayMessageActivity extends Activity {
                     Picasso.with(getBaseContext())
                             .load(urlToDisplay)
                             .resize((int)(200 * dpToPixels) ,0)
-                            .into(imageView);
+                            .into(imageViewFB);
 
                     displayMessageText.setText(text);
                     System.out.println(text);

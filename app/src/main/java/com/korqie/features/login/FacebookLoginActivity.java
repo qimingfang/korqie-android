@@ -18,72 +18,44 @@ package com.korqie.features.login;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.facebook.AppEventsLogger;
 import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookOperationCanceledException;
-import com.facebook.HttpMethod;
-import com.facebook.Request;
-import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphObject;
-import com.facebook.model.GraphPlace;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LoginButton;
-import com.facebook.widget.ProfilePictureView;
 import com.korqie.R;
 import com.korqie.features.DisplayMessageActivity;
-import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Arrays;
-import java.util.List;
 
 public class FacebookLoginActivity extends FragmentActivity {
 
-    private static final String PERMISSION = "publish_actions";
-    private static final Location SEATTLE_LOCATION = new Location("") {
-        {
-            setLatitude(47.6097);
-            setLongitude(-122.3331);
-        }
-    };
-
     private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.features.login.facebooklogin:PendingAction";
     public final static String EXTRA_MESSAGE = "blah";
-    private boolean loggedIn = true;
 
     private LoginButton loginButton;
-    private ProfilePictureView profilePictureView;
-    private TextView greeting;
-    private TextView extraText;
-    private ImageView imageView;
     private PendingAction pendingAction = PendingAction.NONE;
+/*
     private ViewGroup controlsContainer;
+*/
     private GraphUser user;
-    private GraphPlace place;
-    private List<GraphUser> tags;
 
-    // Declare Variables
+
+    // Variables for slideshow
     private ViewPager viewPager;
     private PagerAdapter adapter;
-    private int[] flag;
+    private int[] slides;
     private CirclePageIndicator mIndicator;
 
     private enum PendingAction {
@@ -125,12 +97,12 @@ public class FacebookLoginActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_facebook_login);
 
-        flag = new int[] { R.drawable.intro1, R.drawable.intro2,
+        slides = new int[] { R.drawable.intro1, R.drawable.intro2,
                 R.drawable.intro3 };
 
         // Locate the ViewPager in viewpager_main.xml
         viewPager = (ViewPager) findViewById(R.id.pager);
-        adapter = new ViewPagerAdapter(FacebookLoginActivity.this, flag);
+        adapter = new ViewPagerAdapter(FacebookLoginActivity.this, slides);
         viewPager.setAdapter(adapter);
 
         // ViewPager Indicator
@@ -146,17 +118,12 @@ public class FacebookLoginActivity extends FragmentActivity {
                 if (user != null){
                     startDisplayMessageActivity();
                 }
-                updateUI();
             }
         });
-/*
-        profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
-        greeting = (TextView) findViewById(R.id.greeting);
-        extraText = (TextView) findViewById(R.id.extra_text);
-        imageView = (ImageView) findViewById(R.id.imageViewFB);
-*/
 
+/*
         controlsContainer = (ViewGroup) findViewById(R.id.main_ui_container);
+*/
     }
 
     @Override
@@ -167,8 +134,6 @@ public class FacebookLoginActivity extends FragmentActivity {
         // Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.  Do so in
         // the onResume methods of the primary Activities that an app may be launched into.
         AppEventsLogger.activateApp(this);
-
-        updateUI();
     }
 
     @Override
@@ -212,109 +177,14 @@ public class FacebookLoginActivity extends FragmentActivity {
                     .show();
             pendingAction = PendingAction.NONE;
         } else if (state == SessionState.OPENED_TOKEN_UPDATED) {
-         /*   handlePendingAction();*/
         }
-        updateUI();
     }
 
     private void startDisplayMessageActivity(){
         Session session = Session.getActiveSession();
         Intent intent = new Intent(FacebookLoginActivity.this, DisplayMessageActivity.class);
-        String message = "What's up Tim?";
-        intent.putExtra(EXTRA_MESSAGE, message);
         intent.putExtra("facebookSession", session);
         startActivity(intent);
-    }
-    private void updateUI() {
-        Session session = Session.getActiveSession();
-        boolean enableButtons = (session != null && session.isOpened());
-
-        if (enableButtons && user != null) {
-           /* profilePictureView.setProfileId(user.getId());
-            greeting.setText(getString(R.string.hello_user, user.getFirstName()) + " Your birthday is " + user.getBirthday());*/
-/*
-            makeGraphAPIRequest(session);
-*/
-            loggedIn = true;
-        } else {
-
-    /*        profilePictureView.setProfileId(null);
-            greeting.setText(null);
-            extraText.setText(null);
-            imageView.setImageBitmap(null);*/
-            loggedIn = false;
-        }
-    }
-
-
-    private void makeGraphAPIRequest(final Session session) {
-/*
-        Request rq = displayUserPhotos(session);
-*/
-        Request rq = displayLikes(session);
-        rq.executeAsync();
-    }
-
-    private Request displayUserPhotos(final Session session){
-        Request rq = new Request(Session.getActiveSession(), "me/photos", null, HttpMethod.GET, new Request.Callback() {
-            @Override
-            public void onCompleted(Response response) {
-                try{
-                    String text = "";
-                    text += "These are the url of your pictures: \n";
-                    String urlToDisplay = "";
-                    JSONArray photos = response.getGraphObject().getInnerJSONObject().getJSONArray("data");
-                    for(int i = 0; i < photos.length(); i++){
-                        //JSONObject is used when json start with {}
-                        //JSONArray is used when json start with []
-                        //http://stackoverflow.com/questions/12289844
-                        JSONObject photo = photos.optJSONObject(i);
-                        JSONArray images = photo.optJSONArray("images");
-                        JSONObject largestImage = images.optJSONObject(0);
-                        text += largestImage.optString("source") + "\n";
-                        urlToDisplay = largestImage.optString("source");
-                    }
-                    //http://developer.android.com/guide/practices/screens_support.html
-                    int dpi = getResources().getDisplayMetrics().densityDpi;
-                    double dpToPixels = dpi / 160;
-                    Picasso.with(getBaseContext())
-                            .load(urlToDisplay)
-                            .resize((int)(200 * dpToPixels) ,0)
-                            .into(imageView);
-
-                    extraText.setText(text);
-                    System.out.println(text);
-                }catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        return rq;
-    }
-    private Request displayLikes(final Session session){
-        Request rq = new Request(Session.getActiveSession(), "me/likes", null, HttpMethod.GET, new Request.Callback() {
-            @Override
-            public void onCompleted(Response response) {
-                try{
-                    String text = "";
-                    text += "These are the things you like: \n";
-                    JSONArray likes = response.getGraphObject().getInnerJSONObject().getJSONArray("data");
-                    for(int i = 0; i < likes.length(); i++){
-                        JSONObject like = likes.optJSONObject(i);
-                        text += like.optString("name") + "\n";
-                    }
-                    extraText.setText(text);
-                    System.out.println(text);
-                }catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        return rq;
-    }
-
-    private interface GraphObjectWithId extends GraphObject {
-        String getId();
     }
 
 }

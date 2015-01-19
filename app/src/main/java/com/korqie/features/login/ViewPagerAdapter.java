@@ -12,19 +12,18 @@ import android.widget.RelativeLayout;
 import com.korqie.R;
 
 public class ViewPagerAdapter extends PagerAdapter {
-    // Declare Variables
     Context context;
-    int[] flag;
+    int[] slides;
     LayoutInflater inflater;
 
-    public ViewPagerAdapter(Context context, int[] flag) {
+    public ViewPagerAdapter(Context context, int[] slides) {
         this.context = context;
-        this.flag = flag;
+        this.slides = slides;
     }
 
     @Override
     public int getCount() {
-        return flag.length;
+        return slides.length;
     }
 
     @Override
@@ -35,20 +34,15 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
-        // Declare Variables
-        ImageView imgflag;
-
+        ImageView imageViewSlide;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.viewpager_item, container,
                 false);
 
-        // Locate the ImageView in viewpager_item.xml
-        imgflag = (ImageView) itemView.findViewById(R.id.flag);
-        // Capture position and set to the ImageView
-        imgflag.setImageResource(flag[position]);
+        imageViewSlide = (ImageView) itemView.findViewById(R.id.imageViewSlide);
+        imageViewSlide.setImageResource(slides[position]);
 
-        // Add viewpager_item.xml to ViewPager
         ((ViewPager) container).addView(itemView);
 
         return itemView;
