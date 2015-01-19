@@ -41,15 +41,12 @@ import java.util.Arrays;
 
 public class FacebookLoginActivity extends FragmentActivity {
 
-    private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.features.login.facebooklogin:PendingAction";
-    public final static String EXTRA_MESSAGE = "blah";
-
+    private final String PENDING_ACTION_BUNDLE_KEY =
+            "com.facebook.features.login.facebooklogin:PendingAction";
     private LoginButton loginButton;
     private PendingAction pendingAction = PendingAction.NONE;
-/*
-    private ViewGroup controlsContainer;
-*/
     private GraphUser user;
+
 
 
     // Variables for slideshow
@@ -110,7 +107,8 @@ public class FacebookLoginActivity extends FragmentActivity {
         mIndicator.setViewPager(viewPager);
 
         loginButton = (LoginButton) findViewById(R.id.fb_login_button);
-        loginButton.setReadPermissions(Arrays.asList("user_location", "user_birthday", "user_likes", "user_photos"));
+        loginButton.setReadPermissions(Arrays.asList("user_location", "user_birthday", "user_likes",
+                "user_photos"));
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
@@ -121,9 +119,6 @@ public class FacebookLoginActivity extends FragmentActivity {
             }
         });
 
-/*
-        controlsContainer = (ViewGroup) findViewById(R.id.main_ui_container);
-*/
     }
 
     @Override
@@ -131,8 +126,9 @@ public class FacebookLoginActivity extends FragmentActivity {
         super.onResume();
         uiHelper.onResume();
 
-        // Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.  Do so in
-        // the onResume methods of the primary Activities that an app may be launched into.
+        // Call the 'activateApp' method to log an app event for use in analytics and advertising
+        // reporting.  Do so in the onResume methods of the primary Activities that an app may be
+        // launched into.
         AppEventsLogger.activateApp(this);
     }
 
@@ -156,7 +152,8 @@ public class FacebookLoginActivity extends FragmentActivity {
         uiHelper.onPause();
 
         // Call the 'deactivateApp' method to log an app event for use in analytics and advertising
-        // reporting.  Do so in the onPause methods of the primary Activities that an app may be launched into.
+        // reporting.  Do so in the onPause methods of the primary Activities that an app may be
+        // launched into.
         AppEventsLogger.deactivateApp(this);
     }
 
@@ -181,10 +178,7 @@ public class FacebookLoginActivity extends FragmentActivity {
     }
 
     private void startDisplayMessageActivity(){
-        Session session = Session.getActiveSession();
         Intent intent = new Intent(FacebookLoginActivity.this, DisplayMessageActivity.class);
-        intent.putExtra("facebookSession", session);
         startActivity(intent);
     }
-
 }

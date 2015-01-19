@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +12,6 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.korqie.R;
-import com.korqie.features.login.FacebookLoginActivity;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -24,47 +21,37 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 public class DisplayMessageActivity extends Activity {
-    private TextView displayMessageText;
-    private ImageView imageViewFB;
-    private Button newPictureButton;
-    private Session fbSession;
+    @InjectView(R.id.display_message_text) TextView displayMessageText;
+    @InjectView(R.id.imageViewFB) ImageView imageViewFB;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_message);
-        imageViewFB = (ImageView) findViewById(R.id.imageViewFB);
-        displayMessageText = (TextView) findViewById(R.id.display_message_text);
-        newPictureButton = (Button) findViewById(R.id.newPictureButton);
-
+        ButterKnife.inject(this);
 
         // Get the message from the intent
         Intent intent = getIntent();
-        String message = intent.getStringExtra(FacebookLoginActivity.EXTRA_MESSAGE);
-        fbSession = (Session) intent.getSerializableExtra("facebookSession");
 
-
-        newPictureButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                makeGraphAPIRequest(fbSession);
-            }
-        });
-
-        makeGraphAPIRequest(fbSession);
+        makeGraphAPIRequest();
 
     }
 
-
-    private void makeGraphAPIRequest(Session session) {
+    @OnClick(R.id.newPictureButton)
+    public void makeGraphAPIRequest() {
 /*
         Request rq = displayLikes(session);
 */
-        Request rq = displayUserPhotos(session);
+        Request rq = displayUserPhotos();
         rq.executeAsync();
     }
 
-    private Request displayUserPhotos(Session session){
+    private Request displayUserPhotos(){
         Request rq = new Request(Session.getActiveSession(), "me/photos", null, HttpMethod.GET, new Request.Callback() {
             @Override
             public void onCompleted(Response response) {
@@ -106,9 +93,8 @@ public class DisplayMessageActivity extends Activity {
         return rq;
     }
 
-    private Request displayLikes(Session session){
-
-        Request rq = new Request(session, "me/likes", null, HttpMethod.GET, new Request.Callback() {
+    private Request displayLikes(){
+        Request rq = new Request(Session.getActiveSession(), "me/likes", null, HttpMethod.GET, new Request.Callback() {
             @Override
             public void onCompleted(Response response) {
                 try{

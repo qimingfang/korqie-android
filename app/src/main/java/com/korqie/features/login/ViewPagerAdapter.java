@@ -16,6 +16,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     int[] slides;
     LayoutInflater inflater;
 
+
     public ViewPagerAdapter(Context context, int[] slides) {
         this.context = context;
         this.slides = slides;
@@ -37,8 +38,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         ImageView imageViewSlide;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.viewpager_item, container,
-                false);
+        View itemView = inflater.inflate(R.layout.viewpager_item, container, false);
 
         imageViewSlide = (ImageView) itemView.findViewById(R.id.imageViewSlide);
         imageViewSlide.setImageResource(slides[position]);
