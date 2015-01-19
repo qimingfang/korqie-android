@@ -1,3 +1,4 @@
+<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -67,4 +68,44 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
-</RelativeLayout>
+</RelativeLayout>-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_ui_container"
+
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!--Padding from bottom of screen -->
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/indicator"
+        android:padding="20dip"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        app:radius="10dp"
+        app:fillColor="#91268F"
+        />
+    <!--app:fillColor="#FF888888"
+    app:pageColor="#88FF0000"
+    app:strokeColor="#FF000000"
+    app:strokeWidth="2dp"-->
+
+    <com.facebook.widget.LoginButton
+        android:id="@+id/fb_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        facebook:confirm_logout="false"
+        facebook:fetch_user_info="true"
+        />
+
+</LinearLayout>

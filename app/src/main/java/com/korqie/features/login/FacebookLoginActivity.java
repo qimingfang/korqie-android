@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -42,7 +44,9 @@ import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.ProfilePictureView;
 import com.korqie.R;
+import com.korqie.features.DisplayMessageActivity;
 import com.squareup.picasso.Picasso;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +66,8 @@ public class FacebookLoginActivity extends FragmentActivity {
     };
 
     private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.features.login.facebooklogin:PendingAction";
-
+    public final static String EXTRA_MESSAGE = "blah";
+    private boolean loggedIn = true;
 
     private LoginButton loginButton;
     private ProfilePictureView profilePictureView;
@@ -74,8 +79,12 @@ public class FacebookLoginActivity extends FragmentActivity {
     private GraphUser user;
     private GraphPlace place;
     private List<GraphUser> tags;
-    private boolean canPresentShareDialog;
-    private boolean canPresentShareDialogWithPhotos;
+
+    // Declare Variables
+    private ViewPager viewPager;
+    private PagerAdapter adapter;
+    private int[] flag;
+    private CirclePageIndicator mIndicator;
 
     private enum PendingAction {
         NONE,
@@ -116,32 +125,38 @@ public class FacebookLoginActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_facebook_login);
 
+        flag = new int[] { R.drawable.intro1, R.drawable.intro2,
+                R.drawable.intro3 };
+
+        // Locate the ViewPager in viewpager_main.xml
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        adapter = new ViewPagerAdapter(FacebookLoginActivity.this, flag);
+        viewPager.setAdapter(adapter);
+
+        // ViewPager Indicator
+        mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        mIndicator.setViewPager(viewPager);
+
         loginButton = (LoginButton) findViewById(R.id.fb_login_button);
         loginButton.setReadPermissions(Arrays.asList("user_location", "user_birthday", "user_likes", "user_photos"));
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 FacebookLoginActivity.this.user = user;
+                if (user != null){
+                    startDisplayMessageActivity();
+                }
                 updateUI();
-                // It's possible that we were waiting for this.user to be populated in order to post a
-                // status update.
-                /*handlePendingAction();*/
             }
         });
-
+/*
         profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
         greeting = (TextView) findViewById(R.id.greeting);
         extraText = (TextView) findViewById(R.id.extra_text);
         imageView = (ImageView) findViewById(R.id.imageViewFB);
+*/
 
         controlsContainer = (ViewGroup) findViewById(R.id.main_ui_container);
-
-        // Can we present the share dialog for regular links?
-        canPresentShareDialog = FacebookDialog.canPresentShareDialog(this,
-                FacebookDialog.ShareDialogFeature.SHARE_DIALOG);
-        // Can we present the share dialog for photos?
-        canPresentShareDialogWithPhotos = FacebookDialog.canPresentShareDialog(this,
-                FacebookDialog.ShareDialogFeature.PHOTOS);
     }
 
     @Override
@@ -202,26 +217,41 @@ public class FacebookLoginActivity extends FragmentActivity {
         updateUI();
     }
 
+    private void startDisplayMessageActivity(){
+        Session session = Session.getActiveSession();
+        Intent intent = new Intent(FacebookLoginActivity.this, DisplayMessageActivity.class);
+        String message = "What's up Tim?";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra("facebookSession", session);
+        startActivity(intent);
+    }
     private void updateUI() {
         Session session = Session.getActiveSession();
         boolean enableButtons = (session != null && session.isOpened());
 
         if (enableButtons && user != null) {
-            profilePictureView.setProfileId(user.getId());
-            greeting.setText(getString(R.string.hello_user, user.getFirstName()) + " Your birthday is " + user.getBirthday());
-            makeMeRequest(session);
+           /* profilePictureView.setProfileId(user.getId());
+            greeting.setText(getString(R.string.hello_user, user.getFirstName()) + " Your birthday is " + user.getBirthday());*/
+/*
+            makeGraphAPIRequest(session);
+*/
+            loggedIn = true;
         } else {
-            profilePictureView.setProfileId(null);
+
+    /*        profilePictureView.setProfileId(null);
             greeting.setText(null);
             extraText.setText(null);
-            imageView.setImageBitmap(null);
+            imageView.setImageBitmap(null);*/
+            loggedIn = false;
         }
     }
 
 
-    private void makeMeRequest(final Session session) {
+    private void makeGraphAPIRequest(final Session session) {
+/*
         Request rq = displayUserPhotos(session);
-        /*Request rq = displayLikes(session);*/
+*/
+        Request rq = displayLikes(session);
         rq.executeAsync();
     }
 
@@ -287,49 +317,4 @@ public class FacebookLoginActivity extends FragmentActivity {
         String getId();
     }
 
-
-    private void onClickPostStatusUpdate() {
-        performPublish(PendingAction.POST_STATUS_UPDATE, canPresentShareDialog);
-    }
-
-    private FacebookDialog.ShareDialogBuilder createShareDialogBuilderForLink() {
-        return new FacebookDialog.ShareDialogBuilder(this)
-                .setName("Hello Facebook")
-                .setDescription("The 'Hello Facebook' sample application showcases simple Facebook integration")
-                .setLink("http://developers.facebook.com/android");
-    }
-
-    private void showAlert(String title, String message) {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, null)
-                .show();
-    }
-
-    private boolean hasPublishPermission() {
-        Session session = Session.getActiveSession();
-        return session != null && session.getPermissions().contains("publish_actions");
-    }
-
-    private void performPublish(PendingAction action, boolean allowNoSession) {
-        Session session = Session.getActiveSession();
-        if (session != null) {
-            pendingAction = action;
-            if (hasPublishPermission()) {
-                // We can do the action right away.
-                /*handlePendingAction();*/
-                return;
-            } else if (session.isOpened()) {
-                // We need to get new permissions, then complete the action when we get called back.
-                session.requestNewPublishPermissions(new Session.NewPermissionsRequest(this, PERMISSION));
-                return;
-            }
-        }
-
-        if (allowNoSession) {
-            pendingAction = action;
-            /*handlePendingAction();*/
-        }
-    }
 }

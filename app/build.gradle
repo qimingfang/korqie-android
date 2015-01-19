@@ -62,6 +62,7 @@ dependencies {
     compile 'com.octo.android.robospice:robospice-retrofit:1.4.12+'
     compile 'com.squareup.picasso:picasso:2.4.0'
     provided 'com.squareup.dagger:dagger-compiler:1.2.+'
+    compile 'com.viewpagerindicator:library:2.4.1@aar'
     // Testing Libraries
     compile 'com.android.support:support-v4:21.0.3'
     androidTestCompile 'org.hamcrest:hamcrest-integration:1.1'
