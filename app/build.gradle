@@ -63,6 +63,8 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.4.0'
     provided 'com.squareup.dagger:dagger-compiler:1.2.+'
     compile 'com.viewpagerindicator:library:2.4.1@aar'
+    compile 'com.facebook.android:facebook-android-sdk:3.20.0'
+
     // Testing Libraries
     compile 'com.android.support:support-v4:21.0.3'
     androidTestCompile 'org.hamcrest:hamcrest-integration:1.1'
@@ -86,6 +88,4 @@ dependencies {
         exclude module: 'wagon-http-lightweight'
         exclude module: 'wagon-provider-api'
     }
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':facebook')
 }
