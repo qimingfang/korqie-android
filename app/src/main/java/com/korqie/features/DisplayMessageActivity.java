@@ -26,6 +26,9 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class DisplayMessageActivity extends Activity {
+    public static String FB_USER_PHOTO_ENDPOINT = "me/photos";
+    public static String FB_USER_LIKE_ENDPOINT = "me/likes";
+
     @InjectView(R.id.display_message_text) TextView displayMessageText;
     @InjectView(R.id.imageViewFB) ImageView imageViewFB;
 
@@ -52,17 +55,17 @@ public class DisplayMessageActivity extends Activity {
     }
 
     private Request displayUserPhotos(){
-        Request rq = new Request(Session.getActiveSession(), "me/photos", null, HttpMethod.GET, new Request.Callback() {
+        Request rq = new Request(Session.getActiveSession(), FB_USER_PHOTO_ENDPOINT , null, HttpMethod.GET, new Request.Callback() {
             @Override
             public void onCompleted(Response response) {
                 try{
-                    String text = "";
+                    StringBuilder text = new StringBuilder();
                     String urlToDisplay = "";
                     JSONArray photos = response.getGraphObject().getInnerJSONObject().getJSONArray("data");
                     List<String> listOfImageURL = new ArrayList<String>();
 
-                    text += "These are the url of your pictures: \n";
-                    text += "You have " + photos.length() + " pictures. \n";
+                    text.append("These are the url of your pictures: \n");
+                    text.append("You have " + photos.length() + " pictures. \n");
 
                     for(int i = 0; i < photos.length(); i++){
                         //JSONObject is used when json start with {}
@@ -71,7 +74,7 @@ public class DisplayMessageActivity extends Activity {
                         JSONObject photo = photos.optJSONObject(i);
                         JSONArray images = photo.optJSONArray("images");
                         JSONObject largestImage = images.optJSONObject(0);
-                        text += largestImage.optString("source") + "\n";
+                        text.append(largestImage.optString("source") + "\n");
                         listOfImageURL.add(largestImage.optString("source"));
                     }
                     urlToDisplay = listOfImageURL.get((int) Math.floor(Math.random()*photos.length()));
@@ -94,16 +97,16 @@ public class DisplayMessageActivity extends Activity {
     }
 
     private Request displayLikes(){
-        Request rq = new Request(Session.getActiveSession(), "me/likes", null, HttpMethod.GET, new Request.Callback() {
+        Request rq = new Request(Session.getActiveSession(), FB_USER_LIKE_ENDPOINT, null, HttpMethod.GET, new Request.Callback() {
             @Override
             public void onCompleted(Response response) {
                 try{
-                    String text = "";
-                    text += "These are the things you like: \n";
+                    StringBuilder text = new StringBuilder();
+                    text.append("These are the things you like: \n");
                     JSONArray likes = response.getGraphObject().getInnerJSONObject().getJSONArray("data");
                     for(int i = 0; i < likes.length(); i++){
                         JSONObject like = likes.optJSONObject(i);
-                        text += like.optString("name") + "\n";
+                        text.append(like.optString("name") + "\n");
                     }
                     displayMessageText.setText(text);
                     /*System.out.println(text);*/
