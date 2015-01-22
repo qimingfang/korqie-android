@@ -55,13 +55,15 @@ public class DisplayMessageActivity extends Activity {
     }
 
     private Request displayUserPhotos(){
-        Request rq = new Request(Session.getActiveSession(), FB_USER_PHOTO_ENDPOINT , null, HttpMethod.GET, new Request.Callback() {
+        Request rq = new Request(Session.getActiveSession(), FB_USER_PHOTO_ENDPOINT , null,
+                HttpMethod.GET, new Request.Callback() {
             @Override
             public void onCompleted(Response response) {
                 try{
                     StringBuilder text = new StringBuilder();
                     String urlToDisplay = "";
-                    JSONArray photos = response.getGraphObject().getInnerJSONObject().getJSONArray("data");
+                    JSONArray photos = response.getGraphObject().getInnerJSONObject()
+                            .getJSONArray("data");
                     List<String> listOfImageURL = new ArrayList<String>();
 
                     text.append("These are the url of your pictures: \n");
@@ -77,7 +79,8 @@ public class DisplayMessageActivity extends Activity {
                         text.append(largestImage.optString("source") + "\n");
                         listOfImageURL.add(largestImage.optString("source"));
                     }
-                    urlToDisplay = listOfImageURL.get((int) Math.floor(Math.random()*photos.length()));
+                    urlToDisplay = listOfImageURL.get(
+                            (int) Math.floor(Math.random()* photos.length()));
                     //http://developer.android.com/guide/practices/screens_support.html
                     int dpi = getResources().getDisplayMetrics().densityDpi;
                     double dpToPixels = dpi / 160;
@@ -97,13 +100,15 @@ public class DisplayMessageActivity extends Activity {
     }
 
     private Request displayLikes(){
-        Request rq = new Request(Session.getActiveSession(), FB_USER_LIKE_ENDPOINT, null, HttpMethod.GET, new Request.Callback() {
+        Request rq = new Request(Session.getActiveSession(), FB_USER_LIKE_ENDPOINT, null,
+                HttpMethod.GET, new Request.Callback() {
             @Override
             public void onCompleted(Response response) {
                 try{
                     StringBuilder text = new StringBuilder();
                     text.append("These are the things you like: \n");
-                    JSONArray likes = response.getGraphObject().getInnerJSONObject().getJSONArray("data");
+                    JSONArray likes = response.getGraphObject().getInnerJSONObject()
+                            .getJSONArray("data");
                     for(int i = 0; i < likes.length(); i++){
                         JSONObject like = likes.optJSONObject(i);
                         text.append(like.optString("name") + "\n");
