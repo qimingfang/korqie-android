@@ -43,11 +43,11 @@ public class HistoryActivity extends Activity {
     public void onRequestSuccess(UserApiResponse apiResponse) {
       User user = apiResponse.getFirstValue();
 
-      listAdatper.add("success!");
+      listAdapter.add("success!");
 
       if (user != null) {
         for (String favorite : user.getFavorites()) {
-          listAdatper.add(favorite);
+          listAdapter.add(favorite);
         }
       }
     }
@@ -57,7 +57,7 @@ public class HistoryActivity extends Activity {
   @InjectView(R.id.historyListView) ListView historyListView;
 
   private KorqieApplication app;
-  private ArrayAdapter<String> listAdatper;
+  private ArrayAdapter<String> listAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +68,10 @@ public class HistoryActivity extends Activity {
     app = (KorqieApplication) getApplication();
     app.inject(this);
 
-    listAdatper = new ArrayAdapter<String>(this, R.layout.simplerow, new ArrayList<String>());
-    listAdatper.add("Before fetch");
+    listAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, new ArrayList<String>());
+    listAdapter.add("Before fetch");
 
-    historyListView.setAdapter(listAdatper);
+    historyListView.setAdapter(listAdapter);
 
     fetchHistoryList();
   }

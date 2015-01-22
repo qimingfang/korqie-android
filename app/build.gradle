@@ -2,9 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'robolectric'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'MyAndroidKey'
+            keyPassword 'colonies'
+            storeFile file('C:/Users/Tim Nguyen/android/release_key.jks')
+            storePassword 'colonies'
+        }
+    }
     compileSdkVersion 20
     buildToolsVersion "20.0.0"
-
     defaultConfig {
         applicationId "com.korqie"
         minSdkVersion 15
@@ -12,7 +19,6 @@ android {
         versionCode 1
         versionName "1.0"
     }
-
     buildTypes {
         debug {
             buildConfigField "String", "SHARED_PREFS_FILE", '"TestPrefs"'
@@ -20,7 +26,6 @@ android {
             buildConfigField "String", "DEFAULT_PWD", '"test"'
             buildConfigField "String", "SEVER_URL", '"http://dev.korqie.com"'
         }
-
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -28,13 +33,12 @@ android {
             buildConfigField "String", "SEVER_URL", '"http://api.korqie.com"'
             buildConfigField "String", "DEFAULT_EMAIL", '""'
             buildConfigField "String", "DEFAULT_PWD", '""'
+            signingConfig signingConfigs.config
         }
     }
-
     lintOptions {
         disable 'InvalidPackage'
     }
-
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
@@ -60,7 +64,10 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.8.0+'
     compile 'com.octo.android.robospice:robospice:1.4.12+'
     compile 'com.octo.android.robospice:robospice-retrofit:1.4.12+'
+    compile 'com.squareup.picasso:picasso:2.4.0'
     provided 'com.squareup.dagger:dagger-compiler:1.2.+'
+    compile 'com.viewpagerindicator:library:2.4.1@aar'
+    compile 'com.facebook.android:facebook-android-sdk:3.20.0'
     // Testing Libraries
     compile 'com.android.support:support-v4:21.0.3'
     androidTestCompile 'org.hamcrest:hamcrest-integration:1.1'
@@ -84,5 +91,4 @@ dependencies {
         exclude module: 'wagon-http-lightweight'
         exclude module: 'wagon-provider-api'
     }
-    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
