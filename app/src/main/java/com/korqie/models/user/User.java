@@ -9,7 +9,7 @@ public class User {
   final String _id;
   final String name;
   final String email;
-  final String pwd;
+  /*final String pwd;*/
   final String thumb;
   final List<String> favorites;
   final String created_at;
@@ -24,7 +24,7 @@ public class User {
     this._id = _id;
     this.name = name;
     this.email = email;
-    this.pwd = pwd;
+    /*this.pwd = pwd;*/
     this.thumb = thumb;
     this.favorites = favorites;
     this.created_at = created_at;
@@ -37,5 +37,21 @@ public class User {
 
   public List<String> getFavorites() {
     return favorites;
+  }
+
+  public String getUser() {
+    return getId();
+  }
+
+  public String toString(){
+    StringBuilder text = new StringBuilder();
+    text.append("Id: " + getId() + "\n");
+    text.append("Name: " + name + "\n");
+    text.append("Email: " + email + "\n");
+    text.append("Thumb: " + thumb + "\n");
+    text.append("Favorites: \n");
+    for (String s: favorites)
+      text.append(s + "\n");
+    return text.toString();
   }
 }

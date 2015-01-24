@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,6 +63,7 @@ public class LoginActivity extends Activity {
 
       String cookieValue = apiResponse.getCookie();
       String id = apiResponse.getFirstValue().getUser();
+      Log.d(TAG, "This is the api response: \n" + apiResponse);
 
       if (cookieValue != null && id != null) {
         SharedPreferences settings = getSharedPreferences(BuildConfig.SHARED_PREFS_FILE, 0);
