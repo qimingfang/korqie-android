@@ -59,4 +59,18 @@ public class ApiResponse<T> {
 
     return null;
   }
+
+  public String toString() {
+    StringBuilder text = new StringBuilder();
+    text.append("These are the errors: \n");
+    for (String s : errors)
+      text.append(s + "\n");
+    text.append("\n");
+    text.append("This is the message: " + message);
+    text.append("\n");
+    text.append("These are the results: \n");
+    for (Object s : results)
+      text.append(s.toString() + "\n");
+    return text.toString();
+  }
 }
